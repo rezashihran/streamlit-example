@@ -10,9 +10,9 @@ column_names = df_t.columns.tolist()
 # Add a title
 st.title('Top 10 Highest Support')
 
-# Replace the antecedents and consequents columns with text inside single quotes
-rules['antecedents'] = rules['antecedents'].apply(lambda x: x.replace("{", "").replace("}", "").replace("'", "").strip())
-rules['consequents'] = rules['consequents'].apply(lambda x: x.replace("{", "").replace("}", "").replace("'", "").strip())
+# Replace the antecedents and consequents columns with desired text
+rules['antecedents'] = rules['antecedents'].apply(lambda x: str(x).replace("frozenset", "").replace("'", "").strip())
+rules['consequents'] = rules['consequents'].apply(lambda x: str(x).replace("frozenset", "").replace("'", "").strip())
 
 # Add a multiselect box for the user to select 'pilih barang' from df_t
 selected_items = st.multiselect(
