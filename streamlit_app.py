@@ -11,8 +11,8 @@ column_names = df_t.columns.tolist()
 st.title('Top 10 Highest Support')
 
 # Replace the antecedents and consequents columns with desired text
-rules['antecedents'] = rules['antecedents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})","").strip())
-rules['consequents'] = rules['consequents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})","").strip())
+rules['antecedents'] = rules['antecedents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})", "").strip())
+rules['consequents'] = rules['consequents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})", "").strip())
 
 # Add a multiselect box for the user to select 'pilih barang' from df_t
 selected_items = st.multiselect(
@@ -28,6 +28,6 @@ if not selected_items:
 else:
     st.subheader(f'Top 10 for selected items')
     # Filter rules where any of the selected_items appear in the antecedents
-    filtered_rules = rules[rules['antecedents'].apply(lambda x: any(item in selected_items for item in x))]
+    filtered_rules = rules[rules['antecedents'].apply(lambda x: any(item in selected_items for item in x.split(',')))]
     filtered_rules.sort_values('support', ascending=False, inplace=True)
     st.dataframe(filtered_rules[:10])
