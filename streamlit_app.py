@@ -16,12 +16,8 @@ In the meantime, below is an example of what you can do with just a few lines of
 
 
 # Here's your DataFrame
-df_t = pd.DataFrame(column_items.csv
-    ...  # replace with your actual DataFrame
-)
-rules = pd.DataFrame(rules_items.csv
-    ...  # replace with your actual rules DataFrame
-)
+df_t = pd.DataFrame(column_items.csv)
+rules = pd.DataFrame(rules_items.csv)
 
 column_names = df_t.columns.tolist()
 
