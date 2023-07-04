@@ -4,7 +4,9 @@ import pandas as pd
 # Here's your DataFrame
 df_t = pd.read_csv('column_items.csv')
 rules = pd.read_csv('rules_items.csv')
-
+filtered_rules['antecedents'] = rules['antecedents'].str.extract(r"'([^']*)'")
+filtered_rules['consequents'] = rules['consequents'].str.extract(r"'([^']*)'")
+    
 column_names = df_t.columns.tolist()
 
 # Add a title
