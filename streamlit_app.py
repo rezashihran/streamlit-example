@@ -11,8 +11,8 @@ column_names = df_t.columns.tolist()
 st.title('Top 10 Highest Support')
 
 # Replace the antecedents and consequents columns with desired text
-rules['antecedents'] = rules['antecedents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").strip())
-rules['consequents'] = rules['consequents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").strip())
+rules['antecedents'] = rules['antecedents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})","").strip())
+rules['consequents'] = rules['consequents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})","").strip())
 
 # Add a multiselect box for the user to select 'pilih barang' from df_t
 selected_items = st.multiselect(
