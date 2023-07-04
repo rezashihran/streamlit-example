@@ -29,28 +29,18 @@ selected_items = st.multiselect(
 if not selected_items:
     st.subheader('Top 10 for All data with 5% Support')
     rules.sort_values('support', ascending=False, inplace=True)
-    
-    # Display tables side by side
-    col1, col2 = st.columns(2)
-    with col1:
-        st.dataframe(rules[:10])
+    st.dataframe(rules[:10])
 
     st.subheader('Top 10 for All data with 1% Support')
     rules10.sort_values('support', ascending=False, inplace=True)
-    with col2:
-        st.dataframe(rules10[:10])
+    st.dataframe(rules10[:10])
 else:
     st.subheader(f'Top 10 for All data with 5% Support')
     filtered_rules = rules[rules['antecedents'].apply(lambda x: any(item in selected_items for item in x.split(',')))]
     filtered_rules.sort_values('support', ascending=False, inplace=True)
-    
-    # Display tables side by side
-    col1, col2 = st.columns(2)
-    with col1:
-        st.dataframe(filtered_rules[:10])
+    st.dataframe(filtered_rules[:10])
 
     st.subheader(f'Top 10 for All data with 1% Support')
     filtered_rules10 = rules10[rules10['antecedents'].apply(lambda x: any(item in selected_items for item in x.split(',')))]
     filtered_rules10.sort_values('support', ascending=False, inplace=True)
-    with col2:
-        st.dataframe(filtered_rules10[:10])
+    st.dataframe(filtered_rules10[:10])
