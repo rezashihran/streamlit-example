@@ -4,13 +4,15 @@ import pandas as pd
 # Here's your DataFrame
 df_t = pd.read_csv('column_items.csv')
 rules = pd.read_csv('rules_items.csv')
-filtered_rules['antecedents'] = rules['antecedents'].str.extract(r"'([^']*)'")
-filtered_rules['consequents'] = rules['consequents'].str.extract(r"'([^']*)'")
-    
+
 column_names = df_t.columns.tolist()
 
 # Add a title
 st.title('Top 10 Highest Support')
+
+# Replace the antecedents and consequents columns with text inside single quotes
+rules['antecedents'] = rules['antecedents'].apply(lambda x: x.strip("frozenset()").split(",")[0].strip("' "))
+rules['consequents'] = rules['consequents'].apply(lambda x: x.strip("frozenset()").split(",")[0].strip("' "))
 
 # Add a multiselect box for the user to select 'pilih barang' from df_t
 selected_items = st.multiselect(
@@ -25,17 +27,7 @@ if not selected_items:
     st.dataframe(rules[:10])
 else:
     st.subheader(f'Top 10 for selected items')
-    # Convert selected_items to a set for efficient membership testing
-    selected_items_set = set(selected_items)
-    
-    # Filter rules where all selected_items appear in the antecedents
-    filtered_rules = rules[
-        rules['antecedents'].apply(lambda x: selected_items_set.issubset(x))
-    ]
+    # Filter rules where any of the selected_items appear in the antecedents
+    filtered_rules = rules[rules['antecedents'].apply(lambda x: any(item in selected_items for item in x))]
     filtered_rules.sort_values('support', ascending=False, inplace=True)
-    
-    # Extract text inside single quotes from antecedents and consequents columns
-    filtered_rules['antecedents'] = filtered_rules['antecedents'].str.extract(r"'([^']*)'")
-    filtered_rules['consequents'] = filtered_rules['consequents'].str.extract(r"'([^']*)'")
-    
     st.dataframe(filtered_rules[:10])
