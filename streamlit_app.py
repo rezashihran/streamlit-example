@@ -1,9 +1,10 @@
 import streamlit as st
 import pandas as pd
 
-# Here's your DataFrame
+# Here's your DataFrames
 df_t = pd.read_csv('column_items.csv')
 rules = pd.read_csv('rules_items.csv')
+rules10 = pd.read_csv('rules10_items.csv')
 
 column_names = df_t.columns.tolist()
 
@@ -11,23 +12,41 @@ column_names = df_t.columns.tolist()
 st.title('Top 10 Highest Support')
 
 # Replace the antecedents and consequents columns with desired text
-rules['antecedents'] = rules['antecedents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})", "").strip())
-rules['consequents'] = rules['consequents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})", "").strip())
+rules['antecedents'] = rules['antecedents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})","").strip())
+rules['consequents'] = rules['consequents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})","").strip())
+
+rules10['antecedents'] = rules10['antecedents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})","").strip())
+rules10['consequents'] = rules10['consequents'].apply(lambda x: x.replace("frozenset({'", "").replace("food',", "").replace("(", "").replace("{", "").replace("'", "").replace("})","").strip())
 
 # Add a multiselect box for the user to select 'pilih barang' from df_t
 selected_items = st.multiselect(
     'Select Columns',
     column_names)
 
+# Add checkbox options for filtering
+antecedents_only = st.checkbox("Show Antecedents Only")
+consequents_only = st.checkbox("Show Consequents Only")
+both_selected = st.checkbox("Show Both Antecedents and Consequents")
+
+# Set dimensions for the displayed DataFrames
+table_height = st.slider('Table Height', min_value=100, max_value=1000, step=100, value=400)
+table_width = st.slider('Table Width', min_value=100, max_value=1000, step=100, value=600)
+
 # If no items are selected, show top 10 highest support for all data.
 # If any item is selected, filter data based on user selection and show top 10 highest support for selected items.
 if not selected_items:
-    st.subheader('Top 10 for all data')
+    st.subheader('Top 10 for all data with 5% Support')
     rules.sort_values('support', ascending=False, inplace=True)
-    st.dataframe(rules[:10])
+    st.dataframe(rules[:10], height=table_height, width=table_width)
+
+    st.subheader('Top 10 for all data with 1% Support')
+    rules10.sort_values('support', ascending=False, inplace=True)
+    st.dataframe(rules10[:10], height=table_height, width=table_width)
 else:
     st.subheader(f'Top 10 for selected items')
-    # Filter rules where any of the selected_items appear in the antecedents
-    filtered_rules = rules[rules['antecedents'].apply(lambda x: any(item in selected_items for item in x.split(',')))]
-    filtered_rules.sort_values('support', ascending=False, inplace=True)
-    st.dataframe(filtered_rules[:10])
+    # Filter rules based on user selection
+    if antecedents_only:
+        filtered_rules = rules[
+            rules['antecedents'].apply(lambda x: any(item in selected_items for item in x))]
+        filtered_rules10 = rules10[
+            rules10['antecedents'].apply(lambda x: any(item in selected_items for item in x))]
