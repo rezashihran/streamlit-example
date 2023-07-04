@@ -1,38 +1,52 @@
-from collections import namedtuple
-import altair as alt
-import math
-import pandas as pd
+%%writefile app.py
 import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+from mlxtend.frequent_patterns import apriori, association_rules
 
 """
 # Welcome to Streamlit!
 
 Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
 
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
+If you have any questions, check out our [documentation](https://docs.streamlit.io) and [community
 forums](https://discuss.streamlit.io).
 
 In the meantime, below is an example of what you can do with just a few lines of code:
 """
 
 
-with st.echo(code_location='below'):
-    total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-    num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
+# Here's your DataFrame
+df_t = pd.DataFrame(column_item.csv
+    ...  # replace with your actual DataFrame
+)
+rules = pd.DataFrame(rules_item.csv
+    ...  # replace with your actual rules DataFrame
+)
 
-    Point = namedtuple('Point', 'x y')
-    data = []
+column_names = df_t.columns.tolist()
 
-    points_per_turn = total_points / num_turns
+# Add a title
+st.title('Top 10 Highest Support')
 
-    for curr_point_num in range(total_points):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
+# Add a multiselect box for the user to select 'pilih barang' from df_t
+selected_items = st.multiselect(
+    'Select Columns',
+    column_names)
 
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
+# If no items are selected, show top 10 highest support for all data.
+# If any item is selected, filter data based on user selection and show top 10 highest support for selected items.
+if not selected_items:
+    st.subheader('Top 10 for all data')
+    rules.sort_values('support', ascending=False, inplace=True)
+    fig, ax = plt.subplots()
+    rules[:10].plot(kind='bar', x='antecedents', y='support', ax=ax)
+    st.pyplot(fig)
+else:
+    st.subheader(f'Top 10 for selected items')
+    # Filter rules where any of the selected_items appear in the antecedents
+    filtered_rules = rules[rules['antecedents'].apply(lambda x: any(item in selected_items for item in x))]
+    filtered_rules.sort_values('support', ascending=False, inplace=True)
+    fig, ax = plt.subplots()
+    filtered_rules[:10].plot(kind='bar', x='antecedents', y='support', ax=ax)
+    st.pyplot(fig)
