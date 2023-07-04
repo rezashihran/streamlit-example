@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-from mlxtend.frequent_patterns import apriori, association_rules
 
 # Here's your DataFrame
 df_t = pd.read_csv('column_items.csv')
@@ -25,7 +23,12 @@ if not selected_items:
     st.dataframe(rules[:10])
 else:
     st.subheader(f'Top 10 for selected items')
-    # Filter rules where any of the selected_items appear in the antecedents
-    filtered_rules = rules[rules['antecedents'].apply(lambda x: any(item in selected_items for item in x))]
+    # Convert selected_items to a set for efficient membership testing
+    selected_items_set = set(selected_items)
+    
+    # Filter rules where all selected_items appear in the antecedents
+    filtered_rules = rules[
+        rules['antecedents'].apply(lambda x: selected_items_set.issubset(x))
+    ]
     filtered_rules.sort_values('support', ascending=False, inplace=True)
     st.dataframe(filtered_rules[:10])
