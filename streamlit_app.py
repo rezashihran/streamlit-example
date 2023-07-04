@@ -3,21 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mlxtend.frequent_patterns import apriori, association_rules
 
-"""
-# Welcome to Streamlit!
-
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
-
-If you have any questions, check out our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
-
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
-
-
 # Here's your DataFrame
-df_t = pd.DataFrame(column_items.csv)
-rules = pd.DataFrame(rules_items.csv)
+df_t = pd.read_csv('column_items.csv')
+rules = pd.read_csv('rules_items.csv')
 
 column_names = df_t.columns.tolist()
 
@@ -35,7 +23,7 @@ if not selected_items:
     st.subheader('Top 10 for all data')
     rules.sort_values('support', ascending=False, inplace=True)
     fig, ax = plt.subplots()
-    rules[:10].plot(kind='bar', x='antecedents', y='support', ax=ax)
+    ax.bar(rules[:10]['antecedents'], rules[:10]['support'])
     st.pyplot(fig)
 else:
     st.subheader(f'Top 10 for selected items')
@@ -43,5 +31,5 @@ else:
     filtered_rules = rules[rules['antecedents'].apply(lambda x: any(item in selected_items for item in x))]
     filtered_rules.sort_values('support', ascending=False, inplace=True)
     fig, ax = plt.subplots()
-    filtered_rules[:10].plot(kind='bar', x='antecedents', y='support', ax=ax)
+    ax.bar(filtered_rules[:10]['antecedents'], filtered_rules[:10]['support'])
     st.pyplot(fig)
