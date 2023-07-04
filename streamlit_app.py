@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from streamlit.beta_columns import st_beta_columns
 
 # Here's your DataFrame
 df_t = pd.read_csv('column_items.csv')
@@ -32,7 +31,7 @@ if not selected_items:
     rules.sort_values('support', ascending=False, inplace=True)
     
     # Display tables side by side
-    col1, col2 = st_beta_columns(2)
+    col1, col2 = st.columns(2)
     with col1:
         st.dataframe(rules[:10])
 
@@ -46,7 +45,7 @@ else:
     filtered_rules.sort_values('support', ascending=False, inplace=True)
     
     # Display tables side by side
-    col1, col2 = st_beta_columns(2)
+    col1, col2 = st.columns(2)
     with col1:
         st.dataframe(filtered_rules[:10])
 
