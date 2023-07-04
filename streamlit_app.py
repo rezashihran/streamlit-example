@@ -31,4 +31,9 @@ else:
         rules['antecedents'].apply(lambda x: selected_items_set.issubset(x))
     ]
     filtered_rules.sort_values('support', ascending=False, inplace=True)
+    
+    # Extract text inside single quotes from antecedents and consequents columns
+    filtered_rules['antecedents'] = filtered_rules['antecedents'].str.extract(r"'([^']*)'")
+    filtered_rules['consequents'] = filtered_rules['consequents'].str.extract(r"'([^']*)'")
+    
     st.dataframe(filtered_rules[:10])
