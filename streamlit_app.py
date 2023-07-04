@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
 from mlxtend.frequent_patterns import apriori, association_rules
 
 # Here's your DataFrame
@@ -22,14 +22,12 @@ selected_items = st.multiselect(
 if not selected_items:
     st.subheader('Top 10 for all data')
     rules.sort_values('support', ascending=False, inplace=True)
-    fig, ax = plt.subplots()
-    ax.bar(rules[:10]['antecedents'], rules[:10]['support'])
-    st.pyplot(fig)
+    fig = px.bar(rules[:10], x='antecedents', y='support')
+    st.plotly_chart(fig)
 else:
     st.subheader(f'Top 10 for selected items')
     # Filter rules where any of the selected_items appear in the antecedents
     filtered_rules = rules[rules['antecedents'].apply(lambda x: any(item in selected_items for item in x))]
     filtered_rules.sort_values('support', ascending=False, inplace=True)
-    fig, ax = plt.subplots()
-    ax.bar(filtered_rules[:10]['antecedents'], filtered_rules[:10]['support'])
-    st.pyplot(fig)
+    fig = px.bar(filtered_rules[:10], x='antecedents', y='support')
+    st.plotly_chart(fig)
