@@ -35,8 +35,12 @@ if not selected_items:
     rules10.sort_values('support', ascending=False, inplace=True)
     st.dataframe(rules10[:10])
 else:
-    st.subheader(f'Top 10 for selected items')
-    # Filter rules where any of the selected_items appear in the antecedents
+    st.subheader(f'Top 10 for All data with 5% Support')
     filtered_rules = rules[rules['antecedents'].apply(lambda x: any(item in selected_items for item in x.split(',')))]
     filtered_rules.sort_values('support', ascending=False, inplace=True)
     st.dataframe(filtered_rules[:10])
+
+    st.subheader(f'Top 10 for All data with 1% Support')
+    filtered_rules10 = rules10[rules10['antecedents'].apply(lambda x: any(item in selected_items for item in x.split(',')))]
+    filtered_rules10.sort_values('support', ascending=False, inplace=True)
+    st.dataframe(filtered_rules10[:10])
